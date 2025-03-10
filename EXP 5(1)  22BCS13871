@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+
+void mergeSortedArray(std::vector<int>& nums1, int m, std::vector<int>& nums2, int n) {
+    // Pointer for nums1 (last element of the first m elements)
+    int i = m - 1;
+    // Pointer for nums2 (last element)
+    int j = n - 1;
+    // Pointer for the last position in nums1
+    int k = m + n - 1;
+
+    // While there are elements to compare in nums2
+    while (j >= 0) {
+        // If nums1 is exhausted or nums2's current element is greater
+        if (i < 0 || nums2[j] > nums1[i]) {
+            nums1[k] = nums2[j];
+            j--;
+        } else {
+            nums1[k] = nums1[i];
+            i--;
+        }
+        k--;
+    }
+}
+
+int main() {
+    // Example usage
+    std::vector<int> nums1 = {1, 2, 3, 0, 0, 0}; // nums1 has extra space for nums2
+    std::vector<int> nums2 = {2, 5, 6};
+    int m = 3; // Number of initialized elements in nums1
+    int n = 3; // Number of elements in nums2
+
+    mergeSortedArray(nums1, m, nums2, n);
+
+    // Output the merged array
+    for (int num : nums1) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
