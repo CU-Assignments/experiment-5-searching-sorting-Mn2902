@@ -1,0 +1,56 @@
+ Kth Largest element in an array
+Find the kth largest element in an array using a min-heap or
+Quickselect. The heap approach runs in O(n log k) time, while
+Quickselect runs in O(n) on average. Edge cases include k = 1
+(max element) and k = n (min element).
+
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+
+int partition(std::vector<int>& nums, int left, int right, int pivotIndex) {
+    int pivotValue = nums[pivotIndex];
+    std::swap(nums[pivotIndex], nums[right]); 
+    int storeIndex = left;
+
+    for (int i = left; i < right; i++) {
+        if (nums[i] > pivotValue) { // We want the kth largest, so use '>'
+            std::swap(nums[storeIndex], nums[i]);
+            storeIndex++;
+        }
+    }
+    std::swap(nums[storeIndex], nums[right]); // Move pivot to its final place
+    return storeIndex;
+}
+
+int quickSelect(std::vector<int>& nums, int left, int right, int k) {
+    if (left == right) {
+        return nums[left]; // If the list contains only one element
+    }
+
+    int pivotIndex = left + rand() % (right - left + 1); // Random pivot
+    pivotIndex = partition(nums, left, right, pivotIndex);
+
+    // The pivot is in its final sorted position
+    if (k == pivotIndex) {
+        return nums[k];
+    } else if (k < pivotIndex) {
+        return quickSelect(nums, left, pivotIndex - 1, k);
+    } else {
+        return quickSelect(nums, pivotIndex + 1, right, k);
+    }
+}
+
+int findKthLargestQuickSelect(std::vector<int>& nums, int k) {
+    return quickSelect(nums, 0, nums.size() - 1, k - 1); // k-1 for 0-based index
+}
+
+int main() {
+    std::vector<int> nums = {3, 2, 1, 5, 6, 4};
+    int k = 2; // Find the 2nd largest element
+
+    int result = findKthLargestQuickSelect(nums, k);
+    std::cout << "The " << k << "th largest element is: " << result << std::endl;
+
+    return 0;
+}
